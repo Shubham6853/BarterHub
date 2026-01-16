@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarterHub - Trade Without Money</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="#" class="flex items-center space-x-2" onclick="showPage('home')">
+                    <div class="bg-primary-600 w-10 h-10 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-exchange-alt text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-primary-600 dark:text-primary-400">BarterHub</span>
+                </a>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="hover:text-primary-600 dark:hover:text-primary-400 transition" onclick="showPage('home')">Home</a>
+                    <a href="#" class="hover:text-primary-600 dark:hover:text-primary-400 transition" onclick="showPage('browse')">Browse</a>
+                    <a href="#" class="hover:text-primary-600 dark:hover:text-primary-400 transition" onclick="showPage('add-item')">Add Item</a>
+                    <a href="#" class="relative hover:text-primary-600 dark:hover:text-primary-400 transition" onclick="showPage('proposals')">
+                        Proposals
+                        <span class="notification-badge">3</span>
+                    </a>
+                    <a href="#" class="relative hover:text-primary-600 dark:hover:text-primary-400 transition" onclick="showPage('chat')">
+                        Chat
+                        <span class="notification-badge">5</span>
+                    </a>
+                    <a href="#" class="hover:text-primary-600 dark:hover:text-primary-400 transition" onclick="showPage('admin')" id="admin-link">
+                        Admin
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search items..." class="pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 w-40 md:w-64">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    
+                    <div class="relative">
+                        <button id="user-menu" class="flex items-center space-x-2">
+                            <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                                <span class="font-semibold text-primary-600 dark:text-primary-300">JD</span>
+                            </div>
+                            <span class="hidden md:inline">John Doe</span>
+                        </button>
+                        
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="showPage('dashboard')">Dashboard</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="showPage('profile')">Profile</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="showPage('settings')">Settings</a>
+                            <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500" onclick="showPage('login')">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8 min-h-screen">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-16">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Trade What You Have for What You Need</h1>
+                    <p class="text-xl mb-6 text-gray-600 dark:text-gray-300">BarterHub connects people to exchange goods without money. Find items you want, trade items you have.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#" class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition" onclick="showPage('browse')">Browse Items</a>
+                        <a href="#" class="px-6 py-3 bg-white dark:bg-gray-800 border border-primary-600 text-primary-600 dark:text-primary-300 rounded-lg font-medium hover:bg-primary-50 dark:hover:bg-gray-700 transition" onclick="showPage('add-item')">Add Item</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative">
+                        <div class="w-64 h-64 bg-gradient-to-r from-primary-400 to-secondary-500 rounded-2xl shadow-xl transform rotate-6"></div>
+                        <div class="absolute top-10 -left-10 w-64 h-64 bg-gradient-to-r from-secondary-400 to-primary-500 rounded-2xl shadow-xl transform -rotate-6"></div>
+                        <div class="absolute top-20 left-20 w-64 h-64 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 flex items-center justify-center">
+                            <i class="fas fa-exchange-alt text-6xl text-primary-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold mb-8 text-center">Popular Categories</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow hover:shadow-lg transition cursor-pointer" onclick="showPage('browse')">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-book text-blue-600 dark:text-blue-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold">Books</h3>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow hover:shadow-lg transition cursor-pointer" onclick="showPage('browse')">
+                        <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-laptop text-green-600 dark:text-green-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold">Electronics</h3>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow hover:shadow-lg transition cursor-pointer" onclick="showPage('browse')">
+                        <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-tshirt text-purple-600 dark:text-purple-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold">Clothing</h3>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow hover:shadow-lg transition cursor-pointer" onclick="showPage('browse')">
+                        <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-home text-yellow-600 dark:text-yellow-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold">Home Goods</h3>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow hover:shadow-lg transition cursor-pointer" onclick="showPage('browse')">
+                        <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-gamepad text-red-600 dark:text-red-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold">Games</h3>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow hover:shadow-lg transition cursor-pointer" onclick="showPage('browse')">
+                        <div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-music text-indigo-600 dark:text-indigo-400 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold">Music</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold mb-8 text-center">Trending Items</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Item Card 1 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                        <div class="relative">
+                            <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                            <div class="absolute top-4 right-4">
+                                <button class="w-10 h-10 rounded-full bg-white dark:bg-gray-900 shadow flex items-center justify-center text-gray-500 hover:text-red-500" onclick="toggleWishlist(this)">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Vintage Camera</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Photography</p>
+                                </div>
+                                <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">New</span>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>Sarah K.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">2 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item Card 2 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                        <div class="relative">
+                            <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Designer Handbag</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Fashion</p>
+                                </div>
+                                <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">Popular</span>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>Michael T.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">5 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item Card 3 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                        <div class="relative">
+                            <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Gaming Console</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Electronics</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>Alex J.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">1 mile away</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item Card 4 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                        <div class="relative">
+                            <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                            <div class="absolute top-4 right-4">
+                                <button class="w-10 h-10 rounded-full bg-white dark:bg-gray-900 shadow flex items-center justify-center text-red-500" onclick="toggleWishlist(this)">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Bicycle</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Sports</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>Robert L.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">3 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browse Page -->
+        <div id="browse" class="page">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold">Browse Items</h1>
+                    <button onclick="showPage('home')" class="text-primary-600 hover:underline flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                    </button>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-6 mb-8">
+                    <div class="w-full md:w-1/4">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                            <h3 class="font-semibold text-lg mb-4">Filters</h3>
+                            
+                            <div class="mb-6">
+                                <h4 class="font-medium mb-2">Categories</h4>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600" checked>
+                                        <span class="ml-2">All Categories</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600">
+                                        <span class="ml-2">Electronics</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600">
+                                        <span class="ml-2">Clothing</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600">
+                                        <span class="ml-2">Books</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600">
+                                        <span class="ml-2">Home Goods</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600">
+                                        <span class="ml-2">Sports</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h4 class="font-medium mb-2">Condition</h4>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600" checked>
+                                        <span class="ml-2">New</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600" checked>
+                                        <span class="ml-2">Like New</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600" checked>
+                                        <span class="ml-2">Good</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-primary-600">
+                                        <span class="ml-2">Fair</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h4 class="font-medium mb-2">Distance</h4>
+                                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">
+                                    <option>Within 5 miles</option>
+                                    <option>Within 10 miles</option>
+                                    <option>Within 25 miles</option>
+                                    <option>Within 50 miles</option>
+                                    <option>Any distance</option>
+                                </select>
+                            </div>
+                            
+                            <button class="w-full px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition" onclick="applyFilters()">Apply Filters</button>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full md:w-3/4">
+                        <div class="flex justify-between items-center mb-6">
+                            <p class="text-gray-600 dark:text-gray-400">Showing 24 results</p>
+                            <div>
+                                <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" onchange="sortItems(this.value)">
+                                    <option value="newest">Sort by: Newest</option>
+                                    <option value="oldest">Sort by: Oldest</option>
+                                    <option value="distance">Sort by: Distance</option>
+                                    <option value="popularity">Sort by: Popularity</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Browse Items (6 cards) -->
+                            <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                                <div class="relative">
+                                    <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                                    <div class="absolute top-4 right-4">
+                                        <button class="w-10 h-10 rounded-full bg-white dark:bg-gray-900 shadow flex items-center justify-center text-gray-500 hover:text-red-500" onclick="toggleWishlist(this)">
+                                            <i class="far fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-lg">Vintage Camera</h3>
+                                            <p class="text-gray-500 dark:text-gray-400">Photography</p>
+                                        </div>
+                                        <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">New</span>
+                                    </div>
+                                    <div class="mt-4 flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                        <span>Sarah K.</span>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">2 miles away</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                                <div class="relative">
+                                    <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-lg">Designer Handbag</h3>
+                                            <p class="text-gray-500 dark:text-gray-400">Fashion</p>
+                                        </div>
+                                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">Popular</span>
+                                    </div>
+                                    <div class="mt-4 flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                        <span>Michael T.</span>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">5 miles away</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                                <div class="relative">
+                                    <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-lg">Gaming Console</h3>
+                                            <p class="text-gray-500 dark:text-gray-400">Electronics</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                        <span>Alex J.</span>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">1 mile away</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                                <div class="relative">
+                                    <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                                    <div class="absolute top-4 right-4">
+                                        <!-- Continuation from Browse page items -->
+                                <button class="w-10 h-10 rounded-full bg-white dark:bg-gray-900 shadow flex items-center justify-center text-red-500" onclick="toggleWishlist(this)">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Bicycle</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Sports</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>Robert L.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">3 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                        <div class="relative">
+                            <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Leather Sofa</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Furniture</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>Emma W.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">4 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                        <div class="relative">
+                            <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                            <div class="absolute top-4 right-4">
+                                <button class="w-10 h-10 rounded-full bg-white dark:bg-gray-900 shadow flex items-center justify-center text-gray-500 hover:text-red-500" onclick="toggleWishlist(this)">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg">Vinyl Record Collection</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Music</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                                <span>David R.</span>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">7 miles away</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">&laquo;</a>
+                        <a href="#" class="px-3 py-1 rounded-lg bg-primary-600 text-white">1</a>
+                        <a href="#" class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">2</a>
+                        <a href="#" class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">3</a>
+                        <a href="#" class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">&raquo;</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Item Page -->
+<div id="add-item" class="page">
+    <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold">List an Item for Trade</h2>
+            <button onclick="showPage('home')" class="text-primary-600 hover:underline flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </button>
+        </div>
+        
+        <form id="item-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="title">Item Title</label>
+                        <input type="text" id="title" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="e.g. Vintage Leather Jacket">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="description">Description</label>
+                        <textarea id="description" rows="4" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="Describe your item in detail..."></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="category">Category</label>
+                        <select id="category" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">
+                            <option value="">Select a category</option>
+                            <option value="books">Books</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="home">Home Goods</option>
+                            <option value="sports">Sports</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2">Condition</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="condition" value="new" class="text-primary-600">
+                                <span>New</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="condition" value="like-new" class="text-primary-600">
+                                <span>Like New</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="condition" value="good" class="text-primary-600">
+                                <span>Good</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="condition" value="fair" class="text-primary-600">
+                                <span>Fair</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="condition" value="poor" class="text-primary-600">
+                                <span>Poor</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2">Upload Images</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Click to upload or drag and drop</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF (MAX. 5MB each)</p>
+                                </div>
+                                <input id="dropzone-file" type="file" class="hidden" multiple onchange="handleImageUpload(event)" />
+                            </label>
+                        </div> 
+                        <div id="image-preview" class="image-preview mt-4"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="preferred-trade">Preferred Trade Items</label>
+                        <input type="text" id="preferred-trade" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="e.g. Camera, Furniture, Books">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6">
+                <button type="submit" class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition">List Item for Trade</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Item Detail Page -->
+<div id="item-detail" class="page">
+    <div class="max-w-6xl mx-auto">
+        <button onclick="showPage('browse')" class="mb-6 text-primary-600 hover:underline flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Browse
+        </button>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Image Gallery -->
+                <div class="bg-gray-100 dark:bg-gray-900 p-6">
+                    <div class="relative h-96 rounded-lg overflow-hidden mb-4">
+                        <div class="bg-gray-200 dark:bg-gray-700 w-full h-full"></div>
+                        <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white dark:bg-gray-900 shadow flex items-center justify-center text-red-500" onclick="toggleWishlist(this)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="bg-gray-200 dark:bg-gray-700 h-20 rounded cursor-pointer border-2 border-primary-500"></div>
+                        <div class="bg-gray-200 dark:bg-gray-700 h-20 rounded cursor-pointer"></div>
+                        <div class="bg-gray-200 dark:bg-gray-700 h-20 rounded cursor-pointer"></div>
+                        <div class="bg-gray-200 dark:bg-gray-700 h-20 rounded cursor-pointer"></div>
+                    </div>
+                </div>
+                
+                <!-- Item Details -->
+                <div class="p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 dark:text-blue-200 bg-blue-100 dark:bg-blue-900 rounded-full mb-2">Electronics</span>
+                            <h2 class="text-3xl font-bold mb-2">Professional DSLR Camera</h2>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">Posted by <span class="font-semibold">Sarah Johnson</span> • 3 days ago</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold">$0</p>
+                            <p class="text-gray-600 dark:text-gray-400">Trade only</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
+                        <h3 class="font-semibold text-lg mb-3">Description</h3>
+                        <p class="mb-4">Professional DSLR camera in excellent condition. Comes with 18-55mm lens, camera bag, and memory card. Used lightly for about a year. Perfect for beginners or hobbyists looking to upgrade.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Condition</p>
+                                <p class="font-medium">Like New</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Location</p>
+                                <p class="font-medium">Downtown, 2 miles away</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Availability</p>
+                                <p class="font-medium">Available for trade</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Category</p>
+                                <p class="font-medium">Cameras & Photography</p>
+                            </div>
+                        </div>
+                        
+                        <h3 class="font-semibold text-lg mb-3">Preferred Trades</h3>
+                        <ul class="list-disc pl-5 mb-6">
+                            <li>Laptop in good condition</li>
+                            <li>Designer handbag</li>
+                            <li>High-end headphones</li>
+                            <li>Smartwatch</li>
+                            <li>Or make an offer!</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition flex items-center" onclick="showTradeModal()">
+                            <i class="fas fa-exchange-alt mr-2"></i> Propose Trade
+                        </button>
+                        <button class="px-6 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center" onclick="showPage('chat')">
+                            <i class="far fa-comment-alt mr-2"></i> Ask Question
+                        </button>
+                        <button class="px-6 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center" onclick="shareItem()">
+                            <i class="fas fa-share-alt mr-2"></i> Share
+                        </button>
+                        <button class="px-6 py-3 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-lg font-medium hover:bg-red-200 dark:hover:bg-red-800 transition flex items-center" onclick="reportItem()">
+                            <i class="fas fa-flag mr-2"></i> Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Similar Items -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold mb-6">Similar Items</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                    <div class="relative">
+                        <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg">Mirrorless Camera</h3>
+                                <p class="text-gray-500 dark:text-gray-400">Photography</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                            <span>James P.</span>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">3 miles away</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                    <div class="relative">
+                        <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg">Camera Lens Set</h3>
+                                <p class="text-gray-500 dark:text-gray-400">Photography</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                            <span>Lisa M.</span>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">5 miles away</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow item-card transition duration-300">
+                    <div class="relative">
+                        <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg">Professional Tripod</h3>
+                                <p class="text-gray-500 dark:text-gray-400">Photography</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2"></div>
+                            <span>Thomas R.</span>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <a href="#" class="text-primary-600 dark:text-primary-400 font-medium" onclick="showPage('item-detail')">View Details</a>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">2 miles away</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Chat Page -->
+<div id="chat" class="page">
+    <div class="max-w-6xl mx-auto">
+        <button onclick="showPage('home')" class="mb-6 text-primary-600 hover:underline flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Home
+        </button>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-4 h-[600px]">
+                <!-- Chat List -->
+                <div class="lg:col-span-1 border-r border-gray-200 dark:border-gray-700">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-xl font-bold">Messages</h2>
+                    </div>
+                    <div class="overflow-y-auto h-[520px]">
+                        <!-- Chat 1 -->
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer active-chat" onclick="openChat(1)">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <h3 class="font-semibold">Sarah Johnson</h3>
+                                        <span class="text-xs text-gray-500">2:45 PM</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">I'm interested in your camera. Would you trade...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat 2 -->
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="openChat(2)">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <h3 class="font-semibold">Michael Thomas</h3>
+                                        <span class="text-xs text-gray-500">Yesterday</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">I have a laptop to trade for your camera...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat 3 -->
+                        <div class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="openChat(3)">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <h3 class="font-semibold">Alex Johnson</h3>
+                                        <span class="text-xs text-gray-500">Mon</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 truncate">When can we meet to exchange?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Window -->
+                <div class="lg:col-span-3 flex flex-col">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                        <div>
+                            <h3 class="font-semibold">Sarah Johnson</h3>
+                            <p class="text-xs text-gray-500">Last seen 30 minutes ago</p>
+                        </div>
+                    </div>
+                    
+                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+                        <!-- Message 1 -->
+                        <div class="flex mb-4">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2 mt-1"></div>
+                            <div>
+                                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg chat-bubble received">
+                                    <p>Hi there! I'm interested in your camera. Would you trade for a like-new laptop?</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">2:30 PM</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Message 2 -->
+                        <div class="flex mb-4 justify-end">
+                            <div>
+                                <div class="bg-primary-500 text-white p-4 rounded-lg chat-bubble sent">
+                                    <p>Hi Sarah! What are the specs of the laptop? Can you send some photos?</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1 text-right">2:32 PM</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 ml-2 mt-1"></div>
+                        </div>
+                        
+                        <!-- Message 3 -->
+                        <div class="flex mb-4">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-2 mt-1"></div>
+                            <div>
+                                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg chat-bubble received">
+                                    <p>Sure! It's a Dell XPS 13 with 8GB RAM, 256GB SSD, Intel i5 processor. Barely used. Here are some photos:</p>
+                                    <div class="flex mt-3 gap-2">
+                                        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">2:35 PM</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Message 4 -->
+                        <div class="flex mb-4 justify-end">
+                            <div>
+                                <div class="bg-primary-500 text-white p-4 rounded-lg chat-bubble sent">
+                                    <p>Looks great! I'd be willing to trade. When are you available to meet?</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1 text-right">2:38 PM</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 ml-2 mt-1"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center">
+                            <button class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-2" onclick="attachFile()">
+                                <i class="fas fa-paperclip text-gray-500"></i>
+                            </button>
+                            <input id="message-input" type="text" placeholder="Type a message..." class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-full focus:outline-none" onkeypress="handleKeyPress(event)">
+                            <button class="w-12 h-12 rounded-full bg-primary-600 flex items-center justify-center ml-2" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trade Proposals Page -->
+<div id="proposals" class="page">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold">Trade Proposals</h2>
+            <button onclick="showPage('home')" class="text-primary-600 hover:underline flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </button>
+        </div>
+        
+        <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+            <button class="px-6 py-3 font-medium border-b-2 border-primary-600 text-primary-600" onclick="showTab('received')">Received (3)</button>
+            <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showTab('sent')">Sent (2)</button>
+            <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showTab('verification')">Verification (1)</button>
+            <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showTab('history')">History (5)</button>
+        </div>
+        
+        <div id="received" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Proposal 1 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                            <div>
+                                <h3 class="font-semibold">Sarah Johnson</h3>
+                                <p class="text-sm text-gray-500">Proposed: 2 days ago</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">Pending</span>
+                            <span class="text-sm text-gray-500">For: Camera</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Your Item</p>
+                                    <p class="text-xs">DSLR Camera</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-exchange-alt text-gray-400 mx-2"></i>
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Their Item</p>
+                                    <p class="text-xs">Dell Laptop</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm mb-4">"I have a Dell XPS 13 laptop in excellent condition. Would you trade for your camera?"</p>
+                        
+                        <div class="flex justify-between">
+                            <button class="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-800" onclick="acceptTrade(1)">Accept</button>
+                            <button class="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800" onclick="declineTrade(1)">Decline</button>
+                            <button class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600" onclick="showTradeDetails(1)">View</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Proposal 2 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                            <div>
+                                <h3 class="font-semibold">Michael Thomas</h3>
+                                <p class="text-sm text-gray-500">Proposed: 1 day ago</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">Pending</span>
+                            <span class="text-sm text-gray-500">For: Camera</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Your Item</p>
+                                    <p class="text-xs">DSLR Camera</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-exchange-alt text-gray-400 mx-2"></i>
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Their Item</p>
+                                    <p class="text-xs">Designer Watch</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm mb-4">"I have a brand new designer watch that I think would be a fair trade for your camera."</p>
+                        
+                        <div class="flex justify-between">
+                            <button class="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-800" onclick="acceptTrade(2)">Accept</button>
+                            <button class="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800" onclick="declineTrade(2)">Decline</button>
+                            <button class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600" onclick="showTradeDetails(2)">View</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Proposal 3 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                            <div>
+                                <h3 class="font-semibold">Alex Johnson</h3>
+                                <p class="text-sm text-gray-500">Proposed: 3 days ago</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">Accepted</span>
+                            <span class="text-sm text-gray-500">For: Camera</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Your Item</p>
+                                    <p class="text-xs">DSLR Camera</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-exchange-alt text-gray-400 mx-2"></i>
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Their Item</p>
+                                    <p class="text-xs">Sony Headphones</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm mb-4">"Would you trade your camera for my Sony WH-1000XM4 headphones?"</p>
+                        
+                        <div class="flex justify-between">
+                            <button class="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 w-full" onclick="showVerificationDetails(1)">View Trade Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="sent" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Sent Proposal 1 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                            <div>
+                                <h3 class="font-semibold">Robert Lee</h3>
+                                <p class="text-sm text-gray-500">Proposed: 1 day ago</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">Pending</span>
+                            <span class="text-sm text-gray-500">For: Bicycle</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Your Item</p>
+                                    <p class="text-xs">Gaming Console</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-exchange-alt text-gray-400 mx-2"></i>
+                            <div class="flex items-center">
+                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded mr-3"></div>
+                                <div>
+                                    <p class="font-medium text-sm">Their Item</p>
+                                    <p class="text-xs">Bicycle</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm mb-4">"Would you trade your bicycle for my gaming console?"</p>
+                        
+                        <div class="flex justify-between">
+                            <button class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 w-full" onclick="showTradeDetails(3)">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Verification Tab -->
+        <div id="verification" class="tab-content">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden mb-8">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-4">Trade Verification Process</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        Your trade with Alex Johnson is currently being verified. Both items have been sent to our verification center and are being inspected to ensure they match the listing description and condition.
+                    </p>
+                    
+                    <div class="mb-6">
+                        <button class="mb-4 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition" onclick="showPage('video-verification')">
+                            <i class="fas fa-video mr-2"></i> Start Video Verification
+                        </button>
+                        
+                        <div class="verification-step completed">
+                            <h4 class="font-semibold text-lg mb-2">Trade Accepted</h4>
+                            <p class="text-gray-600 dark:text-gray-300">You and Alex agreed to trade</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">2 days ago</p>
+                        </div>
+                        
+                        <div class="verification-step completed">
+                            <h4 class="font-semibold text-lg mb-2">Items Shipped</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Both items received at verification center</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Yesterday</p>
+                        </div>
+                        
+                        <div class="verification-step active">
+                            <h4 class="font-semibold text-lg mb-2">Verification in Progress</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Our team is inspecting both items</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Estimated completion: Tomorrow</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-step">
+                            <h4 class="font-semibold text-lg mb-2">Items Shipped to New Owners</h4>
+                            <p class="text-gray-600 dark:text-gray-300">After verification, items will be shipped</p>
+                        </div>
+                        
+                        <div class="verification-step">
+                            <h4 class="font-semibold text-lg mb-2">Trade Completed</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Both parties receive their new items</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                        <h4 class="font-semibold text-lg mb-3">Items in Verification</h4>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="flex-1">
+                                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                                    <div class="text-center mb-4">
+                                        <div class="w-32 h-32 bg-gray-200 dark:bg-gray-600 mx-auto rounded mb-2"></div>
+                                        <h5 class="font-semibold">DSLR Camera</h5>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">From: John Doe</p>
+                                    </div>
+                                    <div class="text-sm">
+                                        <p class="font-medium mb-1">Verification Status</p>
+                                        <p class="text-green-600 dark:text-green-400 flex items-center">
+                                            <i class="fas fa-check-circle mr-2"></i> Received and verified
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                                    <div class="text-center mb-4">
+                                        <div class="w-32 h-32 bg-gray-200 dark:bg-gray-600 mx-auto rounded mb-2"></div>
+                                        <h5 class="font-semibold">Sony Headphones</h5>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">From: Alex Johnson</p>
+                                    </div>
+                                    <div class="text-sm">
+                                        <p class="font-medium mb-1">Verification Status</p>
+                                        <p class="text-yellow-600 dark:text-yellow-400 flex items-center">
+                                            <i class="fas fa-hourglass-half mr-2"></i> Inspection in progress
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Login Page -->
+<div id="login" class="page">
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mt-16">
+        <div class="text-center mb-8">
+            <div class="bg-primary-600 w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exchange-alt text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold">Welcome to BarterHub</h2>
+            <p class="text-gray-600 dark:text-gray-400">Sign in to your account</p>
+        </div>
+        
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2" for="login-email">Email Address</label>
+                <input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="you@example.com">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2" for="login-password">Password</label>
+                <input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="••••••••">
+            </div>
+            
+            <div class="flex items-center justify-between mb-6">
+                <label class="flex items-center">
+                    <input type="checkbox" class="text-primary-600 rounded">
+                    <span class="ml-2 text-gray-700 dark:text-gray-300">Remember me</span>
+                </label>
+                <a href="#" class="text-primary-600 hover:underline">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="w-full px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition mb-4">Sign In</button>
+            
+            <div class="text-center mt-6">
+                <p class="text-gray-600 dark:text-gray-400">Don't have an account? <a href="#" class="text-primary-600 hover:underline" onclick="showPage('signup')">Sign up</a></p>
+            </div>
+            
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                <p class="text-sm text-blue-800 dark:text-blue-200 font-semibold mb-2">Demo Credentials:</p>
+                <p class="text-sm text-blue-700 dark:text-blue-300"><strong>Admin:</strong> admin@barterhub.com / admin123</p>
+                <p class="text-sm text-blue-700 dark:text-blue-300"><strong>User:</strong> user@barterhub.com / user123</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Sign Up Page -->
+<div id="signup" class="page">
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mt-16">
+        <div class="text-center mb-8">
+            <div class="bg-primary-600 w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exchange-alt text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold">Create an Account</h2>
+            <p class="text-gray-600 dark:text-gray-400">Join the barter community</p>
+        </div>
+        
+        <form id="signup-form" onsubmit="handleSignup(event)">
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2" for="fullname">Full Name</label>
+                <input type="text" id="fullname" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="John Doe">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2" for="signup-email">Email Address</label>
+                <input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="you@example.com">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2" for="signup-password">Password</label>
+                <input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="••••••••">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2" for="signup-confirm-password">Confirm Password</label>
+                <input type="password" id="signup-confirm-password" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="••••••••">
+            </div>
+            
+            <div class="flex items-center mb-6">
+                <input type="checkbox" id="terms" required class="text-primary-600 rounded">
+                <label for="terms" class="ml-2 text-gray-700 dark:text-gray-300">I agree to the <a href="#" class="text-primary-600 hover:underline">Terms & Conditions</a></label>
+            </div>
+            
+            <button type="submit" class="w-full px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition mb-4">Create Account</button>
+            
+            <div class="text-center mt-6">
+                <p class="text-gray-600 dark:text-gray-400">Already have an account? <a href="#" class="text-primary-600 hover:underline" onclick="showPage('login')">Sign in</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Video Verification Page -->
+<div id="video-verification" class="page">
+    <div class="max-w-6xl mx-auto">
+        <button onclick="showPage('proposals')" class="mb-6 text-primary-600 hover:underline flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Proposals
+        </button>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h2 class="text-3xl font-bold mb-6">Video Verification</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Video Recording Section -->
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Record Item Verification</h3>
+                    <div class="relative bg-black rounded-lg overflow-hidden mb-4" style="height: 400px;">
+                        <video id="verification-video" class="w-full h-full object-cover" autoplay muted></video>
+                        <div id="recorded-video-container" class="hidden w-full h-full">
+                            <video id="recorded-video" class="w-full h-full object-cover" controls></video>
+                        </div>
+                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                            <button id="start-record-btn" class="px-6 py-3 bg-red-600 text-white rounded-full font-medium hover:bg-red-700 transition">
+                                <i class="fas fa-circle mr-2"></i> Start Recording
+                            </button>
+                            <button id="stop-record-btn" class="hidden px-6 py-3 bg-gray-800 text-white rounded-full font-medium hover:bg-gray-900 transition">
+                                <i class="fas fa-stop mr-2"></i> Stop Recording
+                            </button>
+                            <button id="retake-btn" class="hidden px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
+                                <i class="fas fa-redo mr-2"></i> Retake
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                        <p class="mb-2"><i class="fas fa-info-circle mr-2"></i> Please show your item from all angles</p>
+                        <p class="mb-2"><i class="fas fa-info-circle mr-2"></i> Ensure good lighting</p>
+                        <p><i class="fas fa-info-circle mr-2"></i> Video should be 30-60 seconds</p>
+                    </div>
+                </div>
+                
+                <!-- Verification Checklist -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Verification Checklist</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium">Item Condition</span>
+                                <span class="text-yellow-600 dark:text-yellow-400">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Show the current condition of your item</p>
+                        </div>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium">Serial Number/Tags</span>
+                                <span class="text-yellow-600 dark:text-yellow-400">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Show any serial numbers or authenticity tags</p>
+                        </div>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium">All Angles</span>
+                                <span class="text-yellow-600 dark:text-yellow-400">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Show front, back, sides, and any damage</p>
+                        </div>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium">Functionality</span>
+                                <span class="text-yellow-600 dark:text-yellow-400">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Demonstrate that the item works properly</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <button id="submit-verification-btn" class="w-full px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            Submit Verification Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Panel Page -->
+<div id="admin" class="page">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Admin Panel</h1>
+            <button onclick="showPage('home')" class="text-primary-600 hover:underline flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </button>
+        </div>
+        
+        <!-- Admin Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-users text-blue-600 dark:text-blue-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Total Users</p>
+                        <p class="text-2xl font-bold">1,234</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-box text-green-600 dark:text-green-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Active Items</p>
+                        <p class="text-2xl font-bold">856</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-exchange-alt text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Pending Trades</p>
+                        <p class="text-2xl font-bold">42</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-flag text-red-600 dark:text-red-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Reports</p>
+                        <p class="text-2xl font-bold">8</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Tabs -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow">
+            <div class="flex border-b border-gray-200 dark:border-gray-700">
+                <button class="px-6 py-3 font-medium border-b-2 border-primary-600 text-primary-600" onclick="showAdminTab('users')">Users</button>
+                <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showAdminTab('items')">Items</button>
+                <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showAdminTab('trades')">Trades</button>
+                <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showAdminTab('reports')">Reports</button>
+                <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showAdminTab('verifications')">Verifications</button>
+            </div>
+            
+            <!-- Users Tab -->
+            <div id="admin-users" class="admin-tab p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold">User Management</h3>
+                    <input type="text" placeholder="Search users..." class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700">
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Items</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Trades</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                                        <div>
+                                            <div class="font-medium">John Doe</div>
+                                            <div class="text-sm text-gray-500">ID: 1234</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">john.doe@example.com</td>
+                                <td class="px-6 py-4 whitespace-nowrap">24</td>
+                                <td class="px-6 py-4 whitespace-nowrap">18</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-3" onclick="viewUser(1)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="text-yellow-600 hover:text-yellow-800 mr-3" onclick="suspendUser(1)">
+                                        <i class="fas fa-ban"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800" onclick="deleteUser(1)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Items Tab -->
+            <div id="admin-items" class="admin-tab p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold">Item Management</h3>
+                    <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700">
+                        <option>All Items</option>
+                        <option>Pending Approval</option>
+                        <option>Active</option>
+                        <option>Flagged</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <div class="h-48 bg-gray-200 dark:bg-gray-600 rounded mb-3"></div>
+                        <h4 class="font-semibold mb-2">DSLR Camera</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Posted by: John Doe</p>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 px-3 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded text-sm" onclick="approveItem(1)">
+                                <i class="fas fa-check mr-1"></i> Approve
+                            </button>
+                            <button class="flex-1 px-3 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded text-sm" onclick="rejectItem(1)">
+                                <i class="fas fa-times mr-1"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trades Tab -->
+            <div id="admin-trades" class="admin-tab p-6 hidden">
+                <h3 class="text-xl font-semibold mb-6">Trade Monitoring</h3>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold">Trade #1234</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">John Doe ⇄ Sarah Johnson</p>
+                            </div>
+                            <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">In Progress</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm">
+                                <p>DSLR Camera ⇄ Laptop</p>
+                                <p class="text-gray-500 dark:text-gray-400">Started: 2 days ago</p>
+                            </div>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded text-sm" onclick="viewTrade(1234)">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div id="admin-reports" class="admin-tab p-6 hidden">
+                <h3 class="text-xl font-semibold mb-6">User Reports</h3>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold">Report #101</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Reported by: Alex Johnson</p>
+                            </div>
+                            <span class="px-3 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">Urgent</span>
+                        </div>
+                        <p class="text-sm mb-3">Fraudulent item listing - Item not as described</p>
+                        <div class="flex space-x-2">
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded text-sm" onclick="investigateReport(101)">
+                                Investigate
+                            </button>
+                            <button class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded text-sm" onclick="dismissReport(101)">
+                                Dismiss
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Verifications Tab -->
+            <div id="admin-verifications" class="admin-tab p-6 hidden">
+                <h3 class="text-xl font-semibold mb-6">Video Verifications</h3>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold">Verification #V1234</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Trade: John Doe ⇄ Sarah Johnson</p>
+                            </div>
+                            <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">Pending Review</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-3">
+                            <div>
+                                <p class="text-sm font-medium mb-1">Item 1: DSLR Camera</p>
+                                <div class="bg-gray-200 dark:bg-gray-600 rounded h-32"></div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium mb-1">Item 2: Laptop</p>
+                                <div class="bg-gray-200 dark:bg-gray-600 rounded h-32"></div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 px-4 py-2 bg-green-600 text-white rounded text-sm" onclick="approveVerification('V1234')">
+                                <i class="fas fa-check mr-1"></i> Approve Both
+                            </button>
+                            <button class="flex-1 px-4 py-2 bg-red-600 text-white rounded text-sm" onclick="rejectVerification('V1234')">
+                                <i class="fas fa-times mr-1"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard, Profile, Settings, Login, Signup pages remain the same from original HTML -->
+ <!-- Dashboard Page -->
+<div id="dashboard" class="page">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Dashboard</h1>
+            <button onclick="showPage('home')" class="text-primary-600 hover:underline flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-box text-blue-600 dark:text-blue-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Your Items</p>
+                        <p class="text-2xl font-bold">24</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-exchange-alt text-green-600 dark:text-green-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Active Trades</p>
+                        <p class="text-2xl font-bold">7</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center mr-4">
+                        <i class="fas fa-star text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-400">Your Rating</p>
+                        <p class="text-2xl font-bold">4.8/5</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Recent Activity</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                        <div>
+                            <p><span class="font-semibold">Sarah Johnson</span> proposed a trade for your <span class="font-semibold">DSLR Camera</span></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">2 hours ago</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                        <div>
+                            <p>You accepted a trade for <span class="font-semibold">Vintage Watch</span></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Yesterday</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                        <div>
+                            <p>You added a new item: <span class="font-semibold">Gaming Console</span></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">2 days ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Your Items</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th class="py-2 text-left">Item</th>
+                                <th class="py-2 text-left">Status</th>
+                                <th class="py-2 text-left">Views</th>
+                                <th class="py-2 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <td class="py-3">DSLR Camera</td>
+                                <td class="py-3"><span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">Active</span></td>
+                                <td class="py-3">128</td>
+                                <td class="py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="editItem(1)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800" onclick="deleteItem(1)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <td class="py-3">Gaming Console</td>
+                                <td class="py-3"><span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs">Active</span></td>
+                                <td class="py-3">92</td>
+                                <td class="py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="editItem(2)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800" onclick="deleteItem(2)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <td class="py-3">Designer Watch</td>
+                                <td class="py-3"><span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-xs">Pending Trade</span></td>
+                                <td class="py-3">76</td>
+                                <td class="py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="editItem(3)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800" onclick="deleteItem(3)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3">Leather Jacket</td>
+                                <td class="py-3"><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs">Traded</span></td>
+                                <td class="py-3">214</td>
+                                <td class="py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="editItem(4)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800" onclick="deleteItem(4)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Page -->
+<!-- Enhanced Profile Page with Real-time Editing (No Reviews) -->
+<div id="profile" class="page">
+    <div class="max-w-6xl mx-auto">
+        <button onclick="showPage('home')" class="mb-6 text-primary-600 hover:underline flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Home
+        </button>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Live Preview Card (Left Side) -->
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden sticky top-24">
+                    <div class="bg-gradient-to-r from-primary-500 to-secondary-500 h-32 relative" id="profile-cover">
+                        <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/40 transition" onclick="changeCoverPhoto()">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="px-6 pb-6 -mt-16">
+                        <div class="relative inline-block">
+                            <div id="preview-avatar" class="w-32 h-32 rounded-full bg-white dark:bg-gray-700 border-4 border-white dark:border-gray-800 shadow-md flex items-center justify-center">
+                                <span id="preview-initials" class="text-4xl font-bold text-primary-600 dark:text-primary-300">JD</span>
+                            </div>
+                            <button class="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center shadow-lg hover:bg-primary-700 transition" onclick="document.getElementById('avatar-upload').click()">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
+                        </div>
+                        
+                        <div class="mt-4 text-center">
+                            <h2 id="preview-name" class="text-2xl font-bold">John Doe</h2>
+                            <p id="preview-location" class="text-gray-600 dark:text-gray-400">San Francisco, CA</p>
+                            
+                            <div class="flex mt-4 justify-center space-x-6">
+                                <div>
+                                    <p class="font-bold text-xl">24</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Items</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-xl">18</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Trades</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-xl">4.8</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Rating</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-left">
+                                <p id="preview-bio" class="text-sm text-gray-700 dark:text-gray-300">I'm an avid collector of vintage items and tech gadgets. Love trading items that I no longer use for something new and exciting.</p>
+                            </div>
+                            
+                            <div class="mt-4 text-left space-y-2">
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-envelope text-primary-600 w-5"></i>
+                                    <span id="preview-email" class="ml-2 text-gray-700 dark:text-gray-300">john.doe@example.com</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-phone text-primary-600 w-5"></i>
+                                    <span id="preview-phone" class="ml-2 text-gray-700 dark:text-gray-300">(555) 123-4567</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-calendar text-primary-600 w-5"></i>
+                                    <span id="preview-joined" class="ml-2 text-gray-700 dark:text-gray-300">Member since January 2023</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Edit Form (Right Side) -->
+            <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Edit Profile</h2>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Auto-save:</span>
+                            <div id="autosave-indicator" class="w-2 h-2 rounded-full bg-green-500"></div>
+                            <span id="autosave-text" class="text-xs text-gray-500 dark:text-gray-400">Saved</span>
+                        </div>
+                    </div>
+                    
+                    <form id="profile-edit-form" onsubmit="saveProfileChanges(event)">
+                        <!-- Personal Information Section -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4 flex items-center">
+                                <i class="fas fa-user mr-2 text-primary-600"></i>
+                                Personal Information
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-firstname">
+                                        First Name <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="edit-firstname" required 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="John" 
+                                           oninput="updatePreviewDisplay()" 
+                                           placeholder="Enter first name">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-lastname">
+                                        Last Name <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="edit-lastname" required 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="Doe" 
+                                           oninput="updatePreviewDisplay()" 
+                                           placeholder="Enter last name">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-bio">
+                                    Bio <span class="text-xs text-gray-500">(Max 200 characters)</span>
+                                </label>
+                                <textarea id="edit-bio" rows="4" maxlength="200"
+                                          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                          oninput="updatePreviewDisplay(); updateBioCount(this)" 
+                                          placeholder="Tell us about yourself...">I'm an avid collector of vintage items and tech gadgets. Love trading items that I no longer use for something new and exciting.</textarea>
+                                <div class="flex justify-between mt-1">
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">Write a brief description about yourself</span>
+                                    <span id="bio-count" class="text-xs text-gray-500 dark:text-gray-400">150/200</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information Section -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4 flex items-center">
+                                <i class="fas fa-address-book mr-2 text-primary-600"></i>
+                                Contact Information
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-email">
+                                        Email Address <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="email" id="edit-email" required 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="john.doe@example.com" 
+                                           oninput="updatePreviewDisplay()" 
+                                           placeholder="your@email.com">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-phone">
+                                        Phone Number
+                                    </label>
+                                    <input type="tel" id="edit-phone" 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="(555) 123-4567" 
+                                           oninput="updatePreviewDisplay()" 
+                                           placeholder="(555) 123-4567">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Location Section -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4 flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2 text-primary-600"></i>
+                                Location
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-city">
+                                        City <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="edit-city" required 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="San Francisco" 
+                                           oninput="updatePreviewDisplay()" 
+                                           placeholder="City">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-state">
+                                        State <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="edit-state" required 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="CA" 
+                                           oninput="updatePreviewDisplay()" 
+                                           placeholder="State">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="edit-zipcode">
+                                        Zip Code
+                                    </label>
+                                    <input type="text" id="edit-zipcode" 
+                                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 transition"
+                                           value="94102" 
+                                           placeholder="12345">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <button type="button" class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition" onclick="resetProfileForm()">
+                                <i class="fas fa-undo mr-2"></i> Reset Changes
+                            </button>
+                            <div class="flex space-x-3">
+                                <button type="button" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition" onclick="showPage('home')">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition">
+                                    <i class="fas fa-save mr-2"></i> Save All Changes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                                <!-- Review 1 -->
+                                <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
+                                    <div class="flex items-start">
+                                        <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
+                                        <div>
+                                            <div class="flex justify-between">
+                                                <h3 class="font-semibold">Sarah Johnson</h3>
+                                                <div class="flex">
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                </div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">2 weeks ago</p>
+                                            <p class="mt-3">Great trader! The camera was exactly as described. Smooth transaction and friendly communication.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Review 2 -->
+                                <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
+                                    <div class="flex items-start">
+                                        <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
+                                        <div>
+                                            <div class="flex justify-between">
+                                                <h3 class="font-semibold">Michael Thomas</h3>
+                                                <div class="flex">
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                </div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">1 month ago</p>
+                                            <p class="mt-3">Perfect trade! The watch was in excellent condition. Would definitely trade with John again.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Review 3 -->
+                                <div class="pb-6">
+                                    <div class="flex items-start">
+                                        <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-4"></div>
+                                        <div>
+                                            <div class="flex justify-between">
+                                                <h3 class="font-semibold">Alex Johnson</h3>
+                                                <div class="flex">
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="far fa-star text-yellow-400"></i>
+                                                </div>
+                                            </div>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">2 months ago</p>
+                                            <p class="mt-3">Good trade experience. The headphones were as described. Communication was clear and timely.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="items-tab" class="profile-tab hidden">
+                        <div class="mt-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Item cards from user's listings -->
+                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                    <div class="h-48 bg-gray-200 dark:bg-gray-600 rounded mb-3"></div>
+                                    <h4 class="font-semibold mb-2">DSLR Camera</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">128 views • Active</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Page -->
+<div id="settings" class="page">
+    <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold">Account Settings</h2>
+            <button onclick="showPage('home')" class="text-primary-600 hover:underline flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </button>
+        </div>
+        
+        <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+            <button class="px-6 py-3 font-medium border-b-2 border-primary-600 text-primary-600" onclick="showSettingsTab('account')">Account</button>
+            <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showSettingsTab('security')">Security</button>
+            <button class="px-6 py-3 font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600" onclick="showSettingsTab('notifications')">Notifications</button>
+        </div>
+        
+        <div id="account-settings" class="settings-tab active">
+            <form>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="first-name">First Name</label>
+                        <input type="text" id="first-name" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" value="John">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="last-name">Last Name</label>
+                        <input type="text" id="last-name" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" value="Doe">
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 mb-2" for="email">Email Address</label>
+                    <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" value="john.doe@example.com">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 mb-2" for="location">Location</label>
+                    <input type="text" id="location" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" value="San Francisco, CA">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 mb-2" for="bio">Bio</label>
+                    <textarea id="bio" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">I'm an avid collector of vintage items and tech gadgets. Love trading items that I no longer use for something new and exciting.</textarea>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button type="button" class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition" onclick="saveSettings()">Save Changes</button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="security-settings" class="settings-tab hidden">
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg mb-4">Change Password</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="current-password">Current Password</label>
+                        <input type="password" id="current-password" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="new-password">New Password</label>
+                        <input type="password" id="new-password" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">
+                    </div>
+                </div>
+                <button class="mt-4 px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition" onclick="changePassword()">Update Password</button>
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <h3 class="font-semibold text-lg mb-4">Two-Factor Authentication</h3>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">Status: <span class="text-red-600">Disabled</span></p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add an extra layer of security to your account</p>
+                    </div>
+                    <button class="px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition" onclick="enable2FA()">Enable</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="notifications-settings" class="settings-tab hidden">
+            <h3 class="font-semibold text-lg mb-4">Notification Preferences</h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">Email Notifications</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                    </label>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">Push Notifications</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Receive push notifications on your device</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                    </label>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">Trade Proposals</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when someone proposes a trade</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                    </label>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">Messages</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when you receive
+<!-- Copy them from the original file -->
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">BarterHub</h3>
+                    <p class="text-gray-400 mb-4">Trade what you have for what you need, without money changing hands.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white" onclick="showPage('home')">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" onclick="showPage('browse')">Browse Items</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" onclick="showPage('add-item')">Add Item</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" onclick="showPage('proposals')">Trade Proposals</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white" onclick="showPage('chat')">Messages</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Help & Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">How It Works</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Safety Tips</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Feedback</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Subscribe to get updates on new items and promotions.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg bg-gray-700 text-white focus:outline-none w-full">
+                        <button class="bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-r-lg">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 mt-6 text-center text-gray-400">
+                <p>&copy; 2023 BarterHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- All Modals remain the same from original HTML -->
+     <!-- Trade Modal -->
+<div id="trade-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Propose a Trade</h3>
+                <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" onclick="closeTradeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <p class="mb-4">You're proposing to trade for <span class="font-semibold">Professional DSLR Camera</span> from <span class="font-semibold">Sarah Johnson</span></p>
+                
+                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded mr-3"></div>
+                            <div>
+                                <p class="font-medium">Your Item</p>
+                                <p class="text-sm">Select an item to trade</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-exchange-alt text-gray-400 mx-2"></i>
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded mr-3"></div>
+                            <div>
+                                <p class="font-medium">Their Item</p>
+                                <p class="text-sm">Professional DSLR Camera</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2">Select your item to trade</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700">
+                            <option value="">Choose an item</option>
+                            <option value="1">Dell XPS 13 Laptop</option>
+                            <option value="2">Sony WH-1000XM4 Headphones</option>
+                            <option value="3">Apple Watch Series 7</option>
+                            <option value="4">Canon EOS Rebel T7</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">Message to Sarah</label>
+                <textarea rows="4" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="Write a message explaining why this is a good trade..."></textarea>
+            </div>
+            
+            <div class="flex justify-end">
+                <button class="px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition" onclick="submitTradeProposal()">Send Trade Proposal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trade Details Modal -->
+<div id="trade-details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Trade Details</h3>
+                <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" onclick="closeTradeDetailsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                    <div>
+                        <h3 class="font-semibold">Sarah Johnson</h3>
+                        <p class="text-sm text-gray-500">Proposed: 2 days ago</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded mr-3"></div>
+                            <div>
+                                <p class="font-medium text-sm">Your Item</p>
+                                <p class="text-xs">DSLR Camera</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-exchange-alt text-gray-400 mx-2"></i>
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded mr-3"></div>
+                            <div>
+                                <p class="font-medium text-sm">Their Item</p>
+                                <p class="text-xs">Dell Laptop</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="font-medium mb-2">Message from Sarah</p>
+                        <p class="text-sm bg-white dark:bg-gray-800 p-3 rounded-lg">"I have a Dell XPS 13 laptop in excellent condition. Would you trade for your camera?"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between">
+                <button class="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-800" onclick="acceptTrade(1)">Accept</button>
+                <button class="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800" onclick="declineTrade(1)">Decline</button>
+                <button class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600" onclick="showPage('chat')">Message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verification Details Modal -->
+<div id="verification-details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Trade Verification Details</h3>
+                <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" onclick="closeVerificationDetailsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 mr-3"></div>
+                    <div>
+                        <h3 class="font-semibold">Alex Johnson</h3>
+                        <p class="text-sm text-gray-500">Trade accepted: 3 days ago</p>
+                    </div>
+                </div>
+                
+                <div class="verification-step completed">
+                    <h4 class="font-semibold text-lg mb-2">Trade Accepted</h4>
+                    <p class="text-gray-600 dark:text-gray-300">You and Alex agreed to trade</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">3 days ago</p>
+                </div>
+                
+                <div class="verification-step completed">
+                    <h4 class="font-semibold text-lg mb-2">Items Shipped</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Both items received at verification center</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">2 days ago</p>
+                </div>
+                
+                <div class="verification-step active">
+                    <h4 class="font-semibold text-lg mb-2">Verification in Progress</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Our team is inspecting both items</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Estimated completion: Tomorrow</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+                
+                <div class="verification-step">
+                    <h4 class="font-semibold text-lg mb-2">Items Shipped to New Owners</h4>
+                    <p class="text-gray-600 dark:text-gray-300">After verification, items will be shipped</p>
+                </div>
+                
+                <div class="verification-step">
+                    <h4 class="font-semibold text-lg mb-2">Trade Completed</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Both parties receive their new items</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <h4 class="font-semibold text-lg mb-3">Items in Verification</h4>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1">
+                        <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                            <div class="text-center mb-4">
+                                <div class="w-32 h-32 bg-gray-200 dark:bg-gray-600 mx-auto rounded mb-2"></div>
+                                <h5 class="font-semibold">DSLR Camera</h5>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">From: John Doe</p>
+                            </div>
+                            <div class="text-sm">
+                                <p class="font-medium mb-1">Verification Status</p>
+                                <p class="text-green-600 dark:text-green-400 flex items-center">
+                                    <i class="fas fa-check-circle mr-2"></i> Received and verified
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                            <div class="text-center mb-4">
+                                <div class="w-32 h-32 bg-gray-200 dark:bg-gray-600 mx-auto rounded mb-2"></div>
+                                <h5 class="font-semibold">Sony Headphones</h5>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">From: Alex Johnson</p>
+                            </div>
+                            <div class="text-sm">
+                                <p class="font-medium mb-1">Verification Status</p>
+                                <p class="text-yellow-600 dark:text-yellow-400 flex items-center">
+                                    <i class="fas fa-hourglass-half mr-2"></i> Inspection in progress
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Copy Trade Modal, Edit Profile Modal, Trade Details Modal, Verification Details Modal -->
+
+    <script src="script.js"></script>
+</body>
+</html>

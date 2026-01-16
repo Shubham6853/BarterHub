@@ -407,7 +407,7 @@ const users = {
     'user@barterhub.com': {
         password: 'user123',
         role: 'user',
-        name: 'John Doe',
+        name: 'Shubham gupta',
         email: 'user@barterhub.com'
     }
 };

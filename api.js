@@ -1,10 +1,10 @@
 // BarterHub API Service
-// For production, set API_URL to your deployed backend URL (e.g., https://your-backend.onrender.com/api)
-// For local development, use http://localhost:3000/api
+// For production, use your deployed backend URL
+// Local development: http://localhost:3000/api
 
 // Detect environment - use production API if deployed, otherwise local
 const isProduction = window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1');
-const API_URL = isProduction ? 'https://YOUR_BACKEND_URL/api' : 'http://localhost:3000/api';
+const API_URL = isProduction ? 'https://barterhub-g3vp.onrender.com/api' : 'http://localhost:3000/api';
 
 class ApiService {
   constructor() {
@@ -219,4 +219,3 @@ class ApiService {
 }
 
 const api = new ApiService();
-

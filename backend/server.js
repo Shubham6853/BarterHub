@@ -7,10 +7,11 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const multerStorageCloudinary = require('multer-storage-cloudinary');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
-const PORT = 5000;
-const JWT_SECRET = 'barterhub_secret_key_2024';
+const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET || 'barterhub_secret_key_2024';
 
 // Cloudinary Configuration
 cloudinary.config({
@@ -48,8 +49,9 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/barterhub')
+// MongoDB Connection - Use MONGODB_URI from environment or fallback to local
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/barterhub';
+mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.log('❌ MongoDB connection error:', err.message));
 

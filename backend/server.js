@@ -98,6 +98,10 @@ const tradeSchema = new mongoose.Schema({
   offeredItem: { type: String, required: true },
   requester: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  requesterContact: {
+    name: String,
+    location: String
+  },
   status: { type: String, default: 'pending' },
   createdAt: { type: Date, default: Date.now }
 });
@@ -291,7 +295,7 @@ app.get('/api/items/user/my-items', auth, async (req, res) => {
 // Create trade
 app.post('/api/trades', auth, async (req, res) => {
   try {
-    const { itemId, offeredItem } = req.body;
+    const { itemId, offeredItem, location } = req.body;
     
     const item = await Item.findById(itemId);
     if (!item) return res.status(404).json({ message: 'Item not found' });
@@ -299,15 +303,26 @@ app.post('/api/trades', auth, async (req, res) => {
       return res.status(400).json({ message: 'Cannot trade your own item' });
     }
     
+    const requester = await User.findById(req.userId).select('name');
+    
     const trade = new Trade({
       item: itemId,
       offeredItem,
       requester: req.userId,
-      owner: item.owner
+      owner: item.owner,
+      requesterContact: {
+        name: requester.name,
+        location: location || 'Not provided'
+      }
     });
     await trade.save();
     
-    res.status(201).json(trade);
+    const populatedTrade = await Trade.findById(trade._id)
+      .populate('item', 'title description image')
+      .populate('requester', 'name email')
+      .populate('owner', 'name email');
+    
+    res.status(201).json(populatedTrade);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

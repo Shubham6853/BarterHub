@@ -183,13 +183,14 @@ class ApiService {
   }
 
   // Trades
-  async createTrade(itemId, offeredItem) {
+  async createTrade(itemId, offeredItem, location) {
     // server.js expects different format
     const response = await this.request('/trades', {
       method: 'POST',
       body: JSON.stringify({ 
         itemId, 
-        offeredItem
+        offeredItem,
+        location
       })
     });
     return response.trade || response.data?.trade || response;

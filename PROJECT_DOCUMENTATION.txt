@@ -214,8 +214,8 @@ This file contains a class with methods that connect to the backend:
 - createTrade(itemId, offeredItem) - Send trade offer
 - getTrades() - Get all trades
 
-The API URL is set to: http://localhost:3000/api
-(This connects to the backend server)
+The API URL is set to: https://barterhub-g3vp.onrender.com/api
+(This connects to the production backend server)
 
 ------------------------------------------------------------------------------
 FILE: style.css (Styling)
@@ -570,6 +570,119 @@ This project demonstrates:
 - Database modeling
 - Responsive web design
 - Asynchronous data handling
+
+================================================================================
+                         DEPLOYMENT INFORMATION
+================================================================================
+
+The BarterHub application is now deployed and accessible from any device!
+
+LIVE URLs:
+-----------
+- Frontend (GitHub Pages): https://shubham6853.github.io/BarterHub/
+- Backend API (Render): https://barterhub-g3vp.onrender.com
+
+DEPLOYMENT ARCHITECTURE:
+------------------------
+The application uses a split deployment model:
+
+1. FRONTEND (GitHub Pages)
+   - Static HTML, CSS, JavaScript files
+   - Hosted on GitHub repository
+   - Accessible at: https://shubham6853.github.io/BarterHub/
+
+2. BACKEND (Render)
+   - Node.js + Express server
+   - Hosted on Render's free tier
+   - Accessible at: https://barterhub-g3vp.onrender.com
+
+3. DATABASE (MongoDB Atlas)
+   - Cloud MongoDB database
+   - Free M0 cluster
+   - Hosted on AWS Mumbai region
+
+API CONFIGURATION:
+-----------------
+The frontend is configured to communicate with the production backend:
+- API Base URL: https://barterhub-g3vp.onrender.com/api
+- This is set in the api.js file
+
+HOW TO ACCESS FROM ANY DEVICE:
+------------------------------
+Simply open https://shubham6853.github.io/BarterHub/ in any web browser.
+The app works on:
+- Desktop computers
+- Laptops
+- Tablets
+- Smartphones (iOS and Android)
+
+================================================================================
+                         MONGODB ATLAS SETUP
+================================================================================
+
+DATABASE CONFIGURATION:
+----------------------
+- Service: MongoDB Atlas
+- Cluster Name: BarterHub
+- Cloud Provider: AWS
+- Region: Mumbai (ap-south-1)
+- Cluster Tier: M0 Free (Free forever)
+- Database Name: barterhub
+
+CONNECTION STRING:
+------------------
+The backend connects to MongoDB using:
+mongodb+srv://guptag2005a_db_user:***@barterhub.i5qaqsg.mongodb.net/barterhub?retryWrites=true&w=majority
+
+SECURITY SETTINGS:
+-----------------
+- IP Access: 0.0.0.0/0 (Allow access from anywhere)
+- Authentication: SCRAM
+- User Role: atlasAdmin@admin
+
+================================================================================
+                         SECURITY UPDATES
+================================================================================
+
+GITHUB SECURITY FIX:
+-------------------
+Fixed exposed MongoDB credentials that were detected by GitHub:
+
+1. Removed exposed credentials from Git tracking:
+   - backend/.env.example
+   - backend/.env.production
+
+2. Updated files with safe placeholder values
+
+3. Files now contain template values like:
+   - username: placeholder
+   - password: placeholder
+   - cluster: placeholder.mongodb.net
+
+IMPORTANT SECURITY RECOMMENDATIONS:
+----------------------------------
+1. Rotate MongoDB Atlas password periodically
+2. Consider using BFG Repo-Cleaner to remove credentials from Git history
+3. Never commit actual credentials to GitHub
+4. Use environment variables for sensitive data
+
+================================================================================
+
+                         BUG FIXES SUMMARY (2024)
+================================================================================
+
+FIX 1: \"Product not found\" on Offer Trade
+- Issue: Frontend sent {requestedItemId} but backend expected {itemId}
+- Fixed: api.js createTrade body → {itemId, offeredItem}
+- Added: Frontend validation api.getItem() before offer
+
+FIX 2: Images not showing in marketplace
+- Issue: No file upload; JSON only, no Cloudinary middleware
+- Fixed: backend/server.js + multer.single('image') on POST /items
+- Fixed: api.js createItem uses FormData for files → Cloudinary
+- Result: Images upload & display properly
+
+Deployment: Push to main → Render auto-deploys backend.
 
 ================================================================================
 

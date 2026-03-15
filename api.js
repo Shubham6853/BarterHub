@@ -125,24 +125,37 @@ class ApiService {
 
   // Create item - send as JSON matching server.js format exactly
   async createItem(itemData, imageFile = null) {
-    // Match server.js required fields exactly, include image if provided
-    const itemPayload = {
-      title: itemData.title,
-      category: itemData.category,
-      description: itemData.description,
-      lookingFor: itemData.lookingFor || itemData.condition || '',
-      image: itemData.imageUrl || ''  // Include image URL if provided
-    };
-    
-    console.log('Sending item payload:', JSON.stringify(itemPayload));
-    
-    const response = await this.request('/items', {
-      method: 'POST',
-      body: JSON.stringify(itemPayload)
-    });
-    
-    console.log('Create item response:', response);
-    return response;
+    if (imageFile) {
+      // Use FormData for file upload
+      const formData = new FormData();
+      formData.append('title', itemData.title);
+      formData.append('description', itemData.description);
+      formData.append('category', itemData.category);
+      formData.append('condition', itemData.condition || 'good');
+      formData.append('lookingFor', itemData.lookingFor);
+      formData.append('image', imageFile);
+      
+      console.log('Uploading item with image file');
+      const response = await this.uploadFile('/items', formData);
+      console.log('Upload response:', response);
+      return response;
+    } else {
+      // JSON for URL/text only
+      const itemPayload = {
+        title: itemData.title,
+        category: itemData.category,
+        description: itemData.description,
+        lookingFor: itemData.lookingFor || itemData.condition || ''
+      };
+      
+      console.log('Sending item payload (no image):', JSON.stringify(itemPayload));
+      const response = await this.request('/items', {
+        method: 'POST',
+        body: JSON.stringify(itemPayload)
+      });
+      console.log('Create item response:', response);
+      return response;
+    }
   }
 
   async updateItem(id, itemData) {
@@ -175,9 +188,8 @@ class ApiService {
     const response = await this.request('/trades', {
       method: 'POST',
       body: JSON.stringify({ 
-        requestedItemId: itemId, 
-        offeredItem: offeredItem,
-        contactEmail: '' // Will be filled from user profile
+        itemId, 
+        offeredItem
       })
     });
     return response.trade || response.data?.trade || response;

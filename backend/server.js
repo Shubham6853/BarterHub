@@ -15,9 +15,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'barterhub_secret_key_2024';
 
 // Cloudinary Configuration
 cloudinary.config({
-  cloud_name: 'demo', // Using demo for testing - replace with your cloud name
-  api_key: 'your_api_key',
-  api_secret: 'your_api_secret'
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'demo',
+  api_key: process.env.CLOUDINARY_API_KEY || 'your_api_key',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'your_api_secret'
 });
 
 // Cloudinary Storage for Multer
@@ -221,10 +221,9 @@ app.get('/api/items/:id', async (req, res) => {
   }
 });
 
-// Create item - Handle both JSON and multipart form data
-app.post('/api/items', auth, async (req, res) => {
+// Create item - Handle both JSON and Cloudinary file upload
+app.post('/api/items', auth, upload.single('image'), async (req, res) => {
   try {
-    // Handle both JSON and form-data
     const { title, description, category, condition, lookingFor, imageUrl } = req.body;
     
     // Validate required fields
@@ -232,8 +231,8 @@ app.post('/api/items', auth, async (req, res) => {
       return res.status(400).json({ message: 'Please provide title, category, description' });
     }
     
-    // Get image URL - from form field or use empty string
-    const image = imageUrl || '';
+    // Get image from Cloudinary file or URL fallback
+    const image = req.file ? req.file.path : imageUrl || '';
     
     const item = new Item({
       title,

@@ -172,14 +172,20 @@ function createItemCard(item) {
 async function offerTrade(itemId) {
   if (!checkAuth()) return;
   
-  const offeredItem = prompt('What item are you offering in exchange?');
-  if (!offeredItem) return;
-  
   try {
+    // Validate item exists first
+    const item = await api.getItem(itemId);
+    const offeredItem = prompt(`Offer trade for "${item.title}"?\nWhat item are you offering?`);
+    if (!offeredItem) return;
+    
     await api.createTrade(itemId, offeredItem);
     alert('Trade offer sent successfully!');
   } catch (error) {
-    alert(error.message);
+    if (error.message.includes('not found')) {
+      alert('Product not found. It may have been deleted.');
+    } else {
+      alert(error.message);
+    }
   }
 }
 
